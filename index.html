@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Instagram Checker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    input[type="text"] {
+      padding: 10px;
+      width: 250px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      margin-left: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #e1306c;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #c72b5f;
+    }
+    footer {
+      margin-top: 30px;
+      font-size: 14px;
+      color: #555;
+    }
+    footer a {
+      color: #e1306c;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>Instagram Profile Viewer</h2>
+    <input type="text" id="username" placeholder="Enter Instagram username" />
+    <button onclick="visitProfile()">Visit</button>
+  </div>
+
+  <footer>
+    Developed by <a href="https://www.facebook.com/share/16z1mL9TtC/" target="_blank">Nurul Chowdhury</a>
+  </footer>
+
+  <script>
+    function visitProfile() {
+      const username = document.getElementById("username").value.trim();
+      if (username !== "") {
+        const url = "https://instagram.com/" + username;
+        window.open(url, "_blank");
+      } else {
+        alert("Please enter a username.");
+      }
+    }
+  </script>
+</body>
+</html>
