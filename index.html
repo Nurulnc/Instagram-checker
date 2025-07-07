@@ -4,7 +4,123 @@
   <meta charset="UTF-8" />
   <title>Instagram Profile Checker with Export</title>
   <style>
-    /* apnar existing css ekhane */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      margin-top: 50px;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+      color: #222;
+      position: relative;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: -10px;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 4px;
+      background: #ff6f61;
+      border-radius: 2px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      resize: none;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    button {
+      margin: 10px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 30px;
+      background: linear-gradient(to right, #667eea, #764ba2);
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+    }
+
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .results {
+      text-align: left;
+      margin-top: 20px;
+    }
+
+    .active {
+      color: green;
+      font-weight: bold;
+    }
+
+    .inactive {
+      color: red;
+      font-weight: bold;
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 20px;
+      text-align: center;
+      background: #333;
+      color: #eee;
+      width: 100%;
+    }
+
+    footer a {
+      color: #ff6f61;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    footer a:hover {
+      color: #fff;
+    }
   </style>
 </head>
 <body>
@@ -13,7 +129,7 @@
     <p>Paste Instagram usernames (one per line):</p>
     <textarea id="usernames" placeholder="e.g.
 instagram
-cristiano
+Cristiano
 nonexistentuser"></textarea>
     <button onclick="checkUsernames()">Check Profiles</button>
     <button onclick="exportActive()" id="exportBtn" disabled>Export Active to .txt</button>
@@ -25,7 +141,7 @@ nonexistentuser"></textarea>
   </div>
 
   <footer>
-    Developed by <a href="https://instagram.com" target="_blank">Nurul Amin Chowdhury</a>
+    Developed by <a href="https://instagram.com/nurulnc100" target="_blank">Nurul Amin Chowdhury</a>
   </footer>
 
   <script>
@@ -42,10 +158,7 @@ nonexistentuser"></textarea>
       const results = await Promise.all(usernames.map(async (username) => {
         const url = `https://www.instagram.com/${username}/`;
         try {
-          // **Note: 'no-cors' mode will never throw error, so this is not reliable for real check**
-          // This is just a placeholder for demo.
           const response = await fetch(url, { method: 'GET', mode: 'no-cors' });
-          // Assume maybe active if fetch doesn't throw
           activeUsers.push(username);
           return `<p><strong>${username}</strong>: <span class='active'>Maybe Active (check manually)</span></p>`;
         } catch (error) {
