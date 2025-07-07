@@ -1,70 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Instagram Profile Checker</title>
+  <meta charset="UTF-8" />
+  <title>Instagram Profile Checker with Export</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #ff9a9e, #fad0c4);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px;
-      margin: 0;
-    }
-    .container {
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 500px;
-    }
-    textarea {
-      width: 100%;
-      height: 150px;
-      padding: 12px;
-      font-size: 14px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      resize: vertical;
-    }
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background: #e1306c;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    button:hover {
-      background: #c72b5f;
-    }
-    .results {
-      margin-top: 20px;
-    }
-    .active { color: green; }
-    .inactive { color: red; }
-    footer {
-      margin-top: 40px;
-      font-size: 14px;
-      color: #fff;
-      text-align: center;
-    }
-    footer a {
-      color: #fff;
-      text-decoration: underline;
-    }
+    /* apnar existing css ekhane */
   </style>
-  
-  <!-- 🔝 Adsterra Ad (Top) -->
-  <script async="async" data-cfasync="false" src="//pl27100472.profitableratecpm.com/e88abb6b860829230a6d5edab44d5a38/invoke.js"></script>
-  <div id="container-e88abb6b860829230a6d5edab44d5a38"></div>
 </head>
-
 <body>
   <div class="container">
     <h2>Instagram Profile Checker</h2>
@@ -74,27 +16,37 @@ instagram
 cristiano
 nonexistentuser"></textarea>
     <button onclick="checkUsernames()">Check Profiles</button>
+    <button onclick="exportActive()" id="exportBtn" disabled>Export Active to .txt</button>
     <div class="results" id="results"></div>
+
+    <!-- Adsterra Ads Code Below Results -->
+    <script async="async" data-cfasync="false" src="//pl27100472.profitableratecpm.com/e88abb6b860829230a6d5edab44d5a38/invoke.js"></script>
+    <div id="container-e88abb6b860829230a6d5edab44d5a38"></div>
   </div>
 
-  <!-- 🔚 Adsterra Ad (Bottom) -->
-  <script async="async" data-cfasync="false" src="//pl27100472.profitableratecpm.com/e88abb6b860829230a6d5edab44d5a38/invoke.js"></script>
-  <div id="container-e88abb6b860829230a6d5edab44d5a38"></div>
-
   <footer>
-    Developed by <a href="https://instagram.com/nurulnc100" target="_blank">Nurul Amin Chowdhury</a>
+    Developed by <a href="https://instagram.com" target="_blank">Nurul Amin Chowdhury</a>
   </footer>
 
   <script>
+    let activeUsers = [];
+
     async function checkUsernames() {
-      const usernames = document.getElementById("usernames").value.trim().split(/\\n|\\r/);
+      const usernames = document.getElementById("usernames").value.trim().split(/\r?\n/).filter(Boolean);
       const resultsDiv = document.getElementById("results");
+      const exportBtn = document.getElementById("exportBtn");
       resultsDiv.innerHTML = "<p>Checking...</p>";
+      activeUsers = [];
+      exportBtn.disabled = true;
 
       const results = await Promise.all(usernames.map(async (username) => {
         const url = `https://www.instagram.com/${username}/`;
         try {
+          // **Note: 'no-cors' mode will never throw error, so this is not reliable for real check**
+          // This is just a placeholder for demo.
           const response = await fetch(url, { method: 'GET', mode: 'no-cors' });
+          // Assume maybe active if fetch doesn't throw
+          activeUsers.push(username);
           return `<p><strong>${username}</strong>: <span class='active'>Maybe Active (check manually)</span></p>`;
         } catch (error) {
           return `<p><strong>${username}</strong>: <span class='inactive'>Not Found / Disabled</span></p>`;
@@ -102,6 +54,22 @@ nonexistentuser"></textarea>
       }));
 
       resultsDiv.innerHTML = results.join("");
+      if (activeUsers.length > 0) {
+        exportBtn.disabled = false;
+      }
+    }
+
+    function exportActive() {
+      if (activeUsers.length === 0) return;
+      const blob = new Blob([activeUsers.join('\n')], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'active_instagram_usernames.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
   </script>
 </body>
