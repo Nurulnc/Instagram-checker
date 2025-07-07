@@ -2,115 +2,106 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Instagram Checker</title>
+  <title>Instagram Profile Checker</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: Arial, sans-serif;
       background: linear-gradient(to right, #ff9a9e, #fad0c4);
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      height: 100vh;
+      padding: 40px;
       margin: 0;
     }
-
-    .box {
+    .container {
       background: white;
-      padding: 40px 30px;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      text-align: center;
-      animation: fadeIn 1s ease-in-out;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
     }
-
-    h2 {
-      color: #e1306c;
-      margin-bottom: 20px;
-      font-size: 28px;
-    }
-
-    input[type="text"] {
+    textarea {
+      width: 100%;
+      height: 150px;
       padding: 12px;
-      width: 260px;
-      font-size: 16px;
-      border: 2px solid #e1306c;
+      font-size: 14px;
+      border: 1px solid #ccc;
       border-radius: 8px;
-      outline: none;
-      transition: 0.3s ease;
+      resize: vertical;
     }
-
-    input[type="text"]:focus {
-      border-color: #ff4081;
-      box-shadow: 0 0 8px rgba(255, 64, 129, 0.2);
-    }
-
     button {
-      margin-left: 10px;
-      padding: 12px 25px;
-      font-size: 16px;
-      background: linear-gradient(to right, #e1306c, #ff4081);
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #e1306c;
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
-      transition: transform 0.2s ease;
+      font-size: 16px;
     }
-
     button:hover {
-      transform: scale(1.05);
+      background: #c72b5f;
     }
-
+    .results {
+      margin-top: 20px;
+    }
+    .active { color: green; }
+    .inactive { color: red; }
     footer {
       margin-top: 40px;
       font-size: 14px;
       color: #fff;
+      text-align: center;
     }
-
     footer a {
       color: #fff;
       text-decoration: underline;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
   </style>
+  
+  <!-- 🔝 Adsterra Ad (Top) -->
+  <script async="async" data-cfasync="false" src="//pl27100472.profitableratecpm.com/e88abb6b860829230a6d5edab44d5a38/invoke.js"></script>
+  <div id="container-e88abb6b860829230a6d5edab44d5a38"></div>
 </head>
+
 <body>
-  <div class="box">
-    <h2>Instagram Profile Viewer</h2>
-    <input type="text" id="username" placeholder="Enter Instagram username" />
-    <button onclick="visitProfile()">Visit</button>
+  <div class="container">
+    <h2>Instagram Profile Checker</h2>
+    <p>Paste Instagram usernames (one per line):</p>
+    <textarea id="usernames" placeholder="e.g.
+instagram
+cristiano
+nonexistentuser"></textarea>
+    <button onclick="checkUsernames()">Check Profiles</button>
+    <div class="results" id="results"></div>
   </div>
 
+  <!-- 🔚 Adsterra Ad (Bottom) -->
+  <script async="async" data-cfasync="false" src="//pl27100472.profitableratecpm.com/e88abb6b860829230a6d5edab44d5a38/invoke.js"></script>
+  <div id="container-e88abb6b860829230a6d5edab44d5a38"></div>
+
   <footer>
-    Developed by <a href="https://www.facebook.com/share/16z1mL9TtC/" target="_blank">Nurul Chowdhury</a>
+    Developed by <a href="https://instagram.com/nurulnc100" target="_blank">Nurul Amin Chowdhury</a>
   </footer>
 
-  <!-- 🔻 Adsterra Ad Code -->
-  <script type="text/javascript">
-    atOptions = {
-      'key' : '985562a663b32a0a22d0df5a821e1445',
-      'format' : 'iframe',
-      'height' : 250,
-      'width' : 300,
-      'params' : {}
-    };
-  </script>
-  <script type="text/javascript" src="//www.highperformanceformat.com/985562a663b32a0a22d0df5a821e1445/invoke.js"></script>
-  <!-- 🔺 End Adsterra Ad -->
-
   <script>
-    function visitProfile() {
-      const username = document.getElementById("username").value.trim();
-      if (username !== "") {
-        const url = "https://instagram.com/" + username;
-        window.open(url, "_blank");
-      } else {
-        alert("Please enter a username.");
-      }
+    async function checkUsernames() {
+      const usernames = document.getElementById("usernames").value.trim().split(/\\n|\\r/);
+      const resultsDiv = document.getElementById("results");
+      resultsDiv.innerHTML = "<p>Checking...</p>";
+
+      const results = await Promise.all(usernames.map(async (username) => {
+        const url = `https://www.instagram.com/${username}/`;
+        try {
+          const response = await fetch(url, { method: 'GET', mode: 'no-cors' });
+          return `<p><strong>${username}</strong>: <span class='active'>Maybe Active (check manually)</span></p>`;
+        } catch (error) {
+          return `<p><strong>${username}</strong>: <span class='inactive'>Not Found / Disabled</span></p>`;
+        }
+      }));
+
+      resultsDiv.innerHTML = results.join("");
     }
   </script>
 </body>
