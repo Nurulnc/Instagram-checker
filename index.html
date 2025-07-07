@@ -92,6 +92,12 @@
       margin-top: 20px;
     }
 
+    .summary {
+      margin-top: 20px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
     .active {
       color: green;
       font-weight: bold;
@@ -128,14 +134,15 @@
     <h2>Instagram Profile Checker</h2>
     <p>Paste Instagram usernames (one per line):</p>
     <textarea id="usernames" placeholder="e.g.
-instagram
-Cristiano
+Instagram
+cristiano
 nonexistentuser"></textarea>
     <button onclick="checkUsernames()">Check Profiles</button>
     <button onclick="exportActive()" id="exportBtn" disabled>Export Active to .txt</button>
     <div class="results" id="results"></div>
+    <div class="summary" id="summaryCount"></div>
 
-    <!-- Adsterra Ads Code Below Results -->
+    <!-- Adsterra Ads Code -->
     <script async="async" data-cfasync="false" src="//pl27100472.profitableratecpm.com/e88abb6b860829230a6d5edab44d5a38/invoke.js"></script>
     <div id="container-e88abb6b860829230a6d5edab44d5a38"></div>
   </div>
@@ -150,8 +157,10 @@ nonexistentuser"></textarea>
     async function checkUsernames() {
       const usernames = document.getElementById("usernames").value.trim().split(/\r?\n/).filter(Boolean);
       const resultsDiv = document.getElementById("results");
+      const summaryDiv = document.getElementById("summaryCount");
       const exportBtn = document.getElementById("exportBtn");
       resultsDiv.innerHTML = "<p>Checking...</p>";
+      summaryDiv.innerHTML = "";
       activeUsers = [];
       exportBtn.disabled = true;
 
@@ -160,13 +169,20 @@ nonexistentuser"></textarea>
         try {
           const response = await fetch(url, { method: 'GET', mode: 'no-cors' });
           activeUsers.push(username);
-          return `<p><strong>${username}</strong>: <span class='active'>Maybe Active (check manually)</span></p>`;
+          return `<p><strong>${username}</strong>: <span class='active'>Maybe Active</span></p>`;
         } catch (error) {
           return `<p><strong>${username}</strong>: <span class='inactive'>Not Found / Disabled</span></p>`;
         }
       }));
 
       resultsDiv.innerHTML = results.join("");
+
+      const deadCount = usernames.length - activeUsers.length;
+      summaryDiv.innerHTML = `
+        ✅ Active: ${activeUsers.length}  
+        ❌ Dead: ${deadCount}
+      `;
+
       if (activeUsers.length > 0) {
         exportBtn.disabled = false;
       }
